@@ -1,9 +1,17 @@
 import React, {Component} from 'react';
-import {NavLink, withRouter} from 'react-router-dom';
+import {NavLink, Redirect, withRouter} from 'react-router-dom';
+import {Button, Modal} from "react-bootstrap";
 const ReactMarkdown = require('react-markdown');
 
 class CourseDetails extends Component {
+    constructor(props) {
+        super(props);
+        this.modalVisible = false;
+    }
+
     state = {
+        isModalVisible: false,
+        canBeUpdated: false,
         course: {},
         user: {},
         errors: []
@@ -12,16 +20,27 @@ class CourseDetails extends Component {
     componentDidMount() {
         const {context} = this.props;
         const courseId = this.props.id;
+        const {authenticatedUser} = context;
 
         context.data.getCourse(courseId)
             .then((response) => {
                 if (response.status === 404) {
                     this.props.history.push('/not-found');
                 } else {
-                    this.setState({
+                    let obj = {
                         course: response,
                         user: response.User
-                    })
+                    }
+
+                    if (authenticatedUser !== null) {
+                        if (response.userId === authenticatedUser.id) {
+                            obj["canBeUpdated"] = true;
+                        } else {
+                            obj["canBeUpdated"] = false;
+                        }
+                    }
+
+                    this.setState(obj);
                 }
             }).catch((error) => {
             this.setState({
@@ -38,9 +57,23 @@ class CourseDetails extends Component {
             <div>
                 <div className="actions--bar">
                     <div className="bounds">
-                        <div className="grid-100"><span>
-                            <NavLink className="button" to={'/'}>Update Course</NavLink>
-                            <NavLink className="button" to={'/'}>Delete Course</NavLink></span>
+                        <div className="grid-100">
+                            <span>
+                            <NavLink className="button" to={{
+                                pathname: this.canUpdate(),
+                                aboutProps: {
+                                    course,
+                                    user
+                                }
+                            }}>Update Course</NavLink>
+                                {
+                                    this.state.canBeUpdated ?
+                                        this.modal(course.title) :
+                                        <NavLink className="button" to={{
+                                            pathname: '/forbidden'
+                                        }}>Delete Course</NavLink>
+                                }
+                        </span>
                             <NavLink className="button button-secondary" to={'/'}>Return to List</NavLink>
                         </div>
                     </div>
@@ -53,7 +86,7 @@ class CourseDetails extends Component {
                             <p>By {user.firstName} {user.lastName}</p>
                         </div>
                         <div className="course--description">
-                            <ReactMarkdown source={course.description} />
+                            <ReactMarkdown source={course.description}/>
                         </div>
                     </div>
                     <div className="grid-25 grid-right">
@@ -65,13 +98,43 @@ class CourseDetails extends Component {
                                 </li>
                                 <li className="course--stats--list--item">
                                     <h4>Materials Needed</h4>
-                                    <ReactMarkdown source={course.materialsNeeded} />
+                                    <ReactMarkdown source={course.materialsNeeded}/>
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
+        )
+    }
+
+    canUpdate = () => {
+        if (this.state.canBeUpdated) {
+            return "/update-course";
+        } else {
+            return "/forbidden";
+        }
+    }
+
+    modal = (title) => {
+        return (
+            <React.Fragment>
+                <Button className="button" onClick={() => this.setState({isModalVisible: true})}>Delete Course</Button>
+                <Modal open={true} show={this.state.isModalVisible} onHide={() => this.setState({isModalVisible: false})}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Delete Course</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Are you sure you want to delete " {title} "?</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="primary" onClick={() => this.setState({isModalVisible: false})}>
+                            Delete
+                        </Button>
+                        <Button variant="secondary" onClick={() => this.setState({isModalVisible: false})}>
+                        Cancel
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            </React.Fragment>
         )
     }
 }

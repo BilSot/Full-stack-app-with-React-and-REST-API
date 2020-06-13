@@ -751,3 +751,8 @@ input:focus {
 .course--description textarea {
   margin-bottom: 20px;
 }
+
+.btn-primary:not(:disabled):not(.disabled):active,
+.btn-primary:focus{
+  background-color: #7c689b;
+}
