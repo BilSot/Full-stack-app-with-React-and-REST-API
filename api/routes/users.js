@@ -9,19 +9,19 @@ const router = express.Router();
 const neededFields = [
     check('firstName')
         .exists({checkNull: true, checkFalsy: true})
-        .withMessage('Please provide a value for "firstName"'),
+        .withMessage('Please provide a value for "First Name"'),
     check('lastName')
         .exists({checkNull: true, checkFalsy: true})
-        .withMessage('Please provide a value for "lastName"'),
+        .withMessage('Please provide a value for "Last Name"'),
     check('emailAddress')
         .isEmail()
         .normalizeEmail()
         .withMessage('Please provide valid "emailAddress"')
         .exists({checkNull: true, checkFalsy: true})
-        .withMessage('Please provide a value for "emailAddress"'),
+        .withMessage('Please provide a value for "Email Address"'),
     check('password')
         .exists({checkNull: true, checkFalsy: true})
-        .withMessage('Please provide a value for "password"'),
+        .withMessage('Please provide a value for "Password"'),
 ];
 
 const checkEmailAddressDuplicate =

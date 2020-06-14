@@ -63,7 +63,6 @@ export default class CreateCourse extends Component {
     submit = () => {
         const {context} = this.props;
         const loggedInUser = context.authenticatedUser;
-        const userForAuthOnly = context.userNotForStorage;
 
         const {
             title,
@@ -80,38 +79,21 @@ export default class CreateCourse extends Component {
             userId: loggedInUser.id
         };
 
-        context.data.createCourse(course, userForAuthOnly.username, userForAuthOnly.password)
+        context.data.createCourse(course, loggedInUser.emailAddress, loggedInUser.password)
             .then(response => {
-                console.log(response);
                 if (Array.isArray(response)) {
-                    console.log(response);
                     this.setState({
                         errors: response
                     });
-                }else{
+                }else if(response === 500){
+                    this.props.history.push('/error');
+                }
+                else{
                     this.props.history.push('/courses/' + response);
                 }
             })
             .catch();
 
     }
-
-    /*displayErrors = () => {
-        if (this.state.errors.length > 0) {
-            let errors = this.state.errors.map(error => {
-                return <li>{error}</li>;
-            })
-            return (
-                <div>
-                    <h2 className="validation--errors--label">Validation errors</h2>
-                    <div className="validation-errors">
-                        <ul>
-                            {errors}
-                        </ul>
-                    </div>
-                </div>
-            )
-        }
-    }*/
 }
 

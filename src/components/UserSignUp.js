@@ -115,10 +115,18 @@ export default class UserSignUp extends Component {
         };
 
         let errors = [];
+        if(firstName === '' ||
+            lastName === '' ||
+            emailAddress === '' ||
+            password === ''){
+            errors.push("All the fields are mandatory. Please fill them in.\n");
+
+        }
+
         if(password !== confirmPass){
             errors.push("Passwords don't match");
         }
-        if(!this.mailAddressRegExp.test(emailAddress)){
+        if(emailAddress !== '' && !this.mailAddressRegExp.test(emailAddress)){
             errors.push("Please insert a valid email address");
         }
 
@@ -138,7 +146,7 @@ export default class UserSignUp extends Component {
                     });
                 } else {
                     context.actions.signIn(emailAddress, password)
-                        .then(() => this.props.history.push('/authenticated'));
+                        .then(() => this.props.history.push('/'));
                     console.log(`${firstName} ${lastName} is successfully signed up and authenticated!`);
                 }
             })

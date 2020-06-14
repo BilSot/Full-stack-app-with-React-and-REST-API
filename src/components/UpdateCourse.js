@@ -12,17 +12,34 @@ export default class UpdateCourse extends Component {
     }
 
     componentDidMount() {
-        if (this.props.history.location.aboutProps) {
-            const {course} = this.props.history.location.aboutProps;
-            // const {user} = this.props.history.location.aboutProps;
-            this.setState({
-                title: course.title,
-                description: course.description,
-                estimatedTime: course.estimatedTime,
-                materialsNeeded: course.materialsNeeded
-            });
-        }
+        const {context} = this.props;
+        const {authenticatedUser} = context;
 
+        context.data.getCourse(parseInt(this.props.match.params.id))
+            .then(response => {
+                let {title, description, estimatedTime, materialsNeeded} = response;
+                this.setState({
+                    title,
+                    description,
+                    estimatedTime,
+                    materialsNeeded
+                });
+
+                if (authenticatedUser !== null) {
+                    if (response.userId !== authenticatedUser.id) {
+                        this.props.history.push('/forbidden');
+                    }
+                } else if (response.status === 404) {
+                    this.props.history.push('/not-found');
+                } else if (response === 500) {
+                    this.props.history.push('/error');
+                }
+            }).catch((error) => {
+            this.setState({
+                errors: error
+            })
+            console.log("Error" + error);
+        });
     }
 
     render() {
@@ -37,7 +54,7 @@ export default class UpdateCourse extends Component {
         } = this.state;
         return (
             <div className="bounds course--detail">
-                <h1>Create Course</h1>
+                <h1>Update Course</h1>
                 <div>
                     <Form
                         cancel={this.cancel}
@@ -51,8 +68,9 @@ export default class UpdateCourse extends Component {
                                               materialsNeeded={materialsNeeded}
                                               authUser={loggedInUser}
                                               onChange={this.change}
-                            />
-                        )}/>
+                            />)
+                        }
+                    />
                 </div>
             </div>
         )
@@ -76,7 +94,6 @@ export default class UpdateCourse extends Component {
     submit = () => {
         const {context} = this.props;
         const loggedInUser = context.authenticatedUser;
-        const userForAuthOnly = context.userNotForStorage;
 
         const {
             title,
@@ -86,7 +103,7 @@ export default class UpdateCourse extends Component {
         } = this.state;
 
         const course = {
-            id: this.props.history.location.aboutProps.course.id,
+            id: this.props.match.params.id,
             title,
             description,
             estimatedTime,
@@ -94,11 +111,17 @@ export default class UpdateCourse extends Component {
             userId: loggedInUser.id
         };
 
-        context.data.updateCourse(course, userForAuthOnly.username, userForAuthOnly.password)
+        context.data.updateCourse(course, loggedInUser.emailAddress, loggedInUser.password)
             .then(response => {
-                if (response.status === 404) {
+                if (response === 404) {
                     this.props.history.push('/not-found');
-                } else {
+                } else if (Array.isArray(response)) {
+                    this.setState({
+                        errors: response
+                    })
+                } else if (response === 500) {
+                    this.props.history.push('/error');
+                } else if (response === 204) {
                     this.props.history.push('/');
                 }
             })

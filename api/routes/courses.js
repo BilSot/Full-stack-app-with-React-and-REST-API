@@ -73,10 +73,10 @@ PUT method/editing a course - which is allowed only if the authenticated user is
 router.put('/courses/:id', authenticateUser, [
     check('title')
         .exists({ checkNull: true, checkFalsy: true })
-        .withMessage('Please provide a value for "title"'),
+        .withMessage('Please provide a value for "Title"'),
     check('description')
         .exists({ checkNull: true, checkFalsy: true })
-        .withMessage('Please provide a value for "description"')
+        .withMessage('Please provide a value for "Description"')
     ], asyncHandler(async(req, res, next) => {
     const errors = validationResult(req);
 
@@ -114,12 +114,12 @@ router.delete('/courses/:id', authenticateUser, asyncHandler(async(req, res, nex
             await course.destroy();
             res.status(204).end();
         }else{
-            let err = new Error("CourseBox can not be updated by this user.");
+            let err = new Error("Course can not be updated by this user.");
             err.status = 403;
             next(err);
         }
     }else{
-        let err = new Error("CourseBox not found");
+        let err = new Error("Course not found");
         err.status = 404;
         next(err);
     }

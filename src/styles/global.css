@@ -357,6 +357,7 @@ p {
 .course--module:after {
   clear: both;
 }
+
 /* line 112, ../sass/global.sass */
 .course--module--title {
   overflow: hidden;
@@ -392,6 +393,7 @@ p {
 /* line 137, ../sass/global.sass */
 .course--add--module:hover .course--add--title {
   color: #444;
+  background-color: #f0eef1;
 }
 /* line 139, ../sass/global.sass */
 .course--add--module:hover .add {
@@ -752,7 +754,51 @@ input:focus {
   margin-bottom: 20px;
 }
 
+a.new-course:hover,
+a.header,
+a.signout,
+a.signup{
+  text-decoration: none;
+}
+
+a.course--module:hover{
+  background-color: #63537d;
+  text-decoration: none;
+}
+
+.btn-primary,
 .btn-primary:not(:disabled):not(.disabled):active,
-.btn-primary:focus{
+.btn-primary:focus,
+.btn-primary:hover{
   background-color: #7c689b;
+  border: none;
+  box-shadow: none;
+  text-decoration: none;
+}
+
+.button-secondary:hover,
+a.new-course:hover,
+a.update-course:hover{
+  background-color: #f0eef1;
+  text-decoration: none;
+}
+
+.img-container,
+.content-container{
+  text-align: center;
+}
+
+.content-container h2{
+  font-size: 1.2rem;
+  color: red;
+}
+
+.modal-title{
+  font-weight: 600;
+  color: #7c689b;
+}
+
+.modal-body{
+  font-weight: 600;
+  color: darkslategray;
 }

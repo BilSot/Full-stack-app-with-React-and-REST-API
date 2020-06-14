@@ -72,8 +72,8 @@ export default class Data {
     else if (response.status === 404) {
       return response;
     }
-    else {
-      throw new Error();
+    else if(response.status === 500){
+      return 500;
     }
   }
 
@@ -89,23 +89,34 @@ export default class Data {
         return data.errors;
       });
     }
-    else {
-      throw new Error("Internal error");
+    else if(response.status === 500){
+      return 500;
     }
   }
 
   async updateCourse(course, username, password){
     const response = await this.api(`/courses/${course.id}`, 'PUT', course, true, {username: username, password: password});
     if(response.status === 204){
-      return [];
+      return 204;
     }else if(response.status === 404){
-      return response;
-    }else{
-      throw new Error("Internal error");
+      return 404;
+    }else if(response.status === 400){
+      return response.json().then(data => {
+        return data.errors;
+      });
+    }else if(response.status === 500){
+      return 500;
     }
   }
 
   async deleteCourse(course, username, password){
     const response = await this.api(`/courses/${course.id}`, 'DELETE', course, true, {username: username, password: password});
+    if(response.status === 204){
+      return 204;
+    }else if(response.status === 404){
+      return 404;
+    }else if(response.status === 500){
+      return 500;
+    }
   }
 }

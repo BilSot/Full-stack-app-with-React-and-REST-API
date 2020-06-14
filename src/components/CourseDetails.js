@@ -1,13 +1,10 @@
 import React, {Component} from 'react';
-import {NavLink, Redirect, withRouter} from 'react-router-dom';
+import {NavLink, withRouter} from 'react-router-dom';
 import {Button, Modal} from "react-bootstrap";
+
 const ReactMarkdown = require('react-markdown');
 
 class CourseDetails extends Component {
-    constructor(props) {
-        super(props);
-        this.modalVisible = false;
-    }
 
     state = {
         isModalVisible: false,
@@ -26,6 +23,8 @@ class CourseDetails extends Component {
             .then((response) => {
                 if (response.status === 404) {
                     this.props.history.push('/not-found');
+                } else if (response === 500) {
+                    this.props.history.push('/error');
                 } else {
                     let obj = {
                         course: response,
@@ -59,19 +58,17 @@ class CourseDetails extends Component {
                     <div className="bounds">
                         <div className="grid-100">
                             <span>
-                            <NavLink className="button" to={{
-                                pathname: this.canUpdate(),
-                                aboutProps: {
-                                    course,
-                                    user
-                                }
-                            }}>Update Course</NavLink>
                                 {
                                     this.state.canBeUpdated ?
-                                        this.modal(course.title) :
-                                        <NavLink className="button" to={{
-                                            pathname: '/forbidden'
-                                        }}>Delete Course</NavLink>
+                                        <NavLink className="button btn-primary" to={{
+                                            pathname: this.canUpdate()
+                                        }}>Update Course</NavLink> :
+                                        null
+                                }
+                                {
+                                    this.state.canBeUpdated ?
+                                        this.modal(course) :
+                                        null
                                 }
                         </span>
                             <NavLink className="button button-secondary" to={'/'}>Return to List</NavLink>
@@ -110,32 +107,52 @@ class CourseDetails extends Component {
 
     canUpdate = () => {
         if (this.state.canBeUpdated) {
-            return "/update-course";
+            return `/courses/${this.state.course.id}/update`;
         } else {
             return "/forbidden";
         }
     }
 
-    modal = (title) => {
+    modal = (course) => {
         return (
             <React.Fragment>
                 <Button className="button" onClick={() => this.setState({isModalVisible: true})}>Delete Course</Button>
-                <Modal open={true} show={this.state.isModalVisible} onHide={() => this.setState({isModalVisible: false})}>
+                <Modal open={true} show={this.state.isModalVisible}
+                       onHide={() => this.setState({isModalVisible: false})}>
                     <Modal.Header closeButton>
                         <Modal.Title>Delete Course</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>Are you sure you want to delete " {title} "?</Modal.Body>
+                    <Modal.Body>Are you sure you want to delete "{course.title}"?</Modal.Body>
                     <Modal.Footer>
-                        <Button variant="primary" onClick={() => this.setState({isModalVisible: false})}>
+                        <Button variant="primary" onClick={() => {
+                            this.deleteCourse(course);
+                            this.setState({isModalVisible: false});
+                        }}>
                             Delete
                         </Button>
                         <Button variant="secondary" onClick={() => this.setState({isModalVisible: false})}>
-                        Cancel
+                            Cancel
                         </Button>
                     </Modal.Footer>
                 </Modal>
             </React.Fragment>
         )
+    }
+
+    deleteCourse = (course) => {
+        const {context} = this.props;
+        const loggedInUser = context.authenticatedUser;
+
+        context.data.deleteCourse(course, loggedInUser.emailAddress, loggedInUser.password)
+            .then(response => {
+                if (response === 204) {
+                    this.props.history.push('/');
+                } else if (response === 500) {
+                    this.props.history.push('/error');
+                } else if (response === 404) {
+                    this.props.history.push('/not-found');
+                }
+            })
     }
 }
 
