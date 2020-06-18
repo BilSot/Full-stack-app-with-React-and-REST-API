@@ -53,7 +53,7 @@ export default class CreateCourse extends Component {
      * Returns the user to the previous window (the page with the Course's details)
      */
     cancel = () => {
-        this.props.history.push(this.props.history.goBack());
+        this.props.history.push('/');
     }
 
     /**

@@ -89,7 +89,7 @@ export default class UpdateCourse extends Component {
      * Returns the user to the previous visited page
      */
     cancel = () => {
-        this.props.history.push(this.props.history.goBack());
+        this.props.history.push(`/courses/${this.props.match.params.id}`);
     }
 
     /**
