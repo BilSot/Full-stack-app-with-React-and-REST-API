@@ -33,7 +33,6 @@ app.use(morgan('dev'));
 
 })();
 
-// TODO setup your api routes here
 app.use('/api', users);
 app.use('/api', courses);
 

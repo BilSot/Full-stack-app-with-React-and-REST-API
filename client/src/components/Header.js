@@ -1,6 +1,11 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 
+/**
+ * This component is responsible for rendering the Header of the application
+ * When there is a logged-in user, the content of the header changes to a welcome message
+ * Otherwise the buttons for sign in and sigh up are shown
+ */
 export default class Header extends React.PureComponent {
     render() {
         const {context} = this.props;

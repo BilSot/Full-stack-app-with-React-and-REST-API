@@ -2,12 +2,20 @@ import React, {Component} from 'react';
 import {NavLink} from 'react-router-dom';
 import CourseBox from "./CourseBox";
 
-export default class Homepage extends Component {
+/**
+ * This component is responsible for rendering all the available courses retrieved from the database
+ */
+export default class Courses extends Component {
     state = {
         courses: [],
         errors: []
     };
 
+    /**
+     * When the component first loads, the Context's getCourses function makes a call to the API to retrieve info
+     * of all the available courses
+     * If success, updates the state object with the returned value
+     */
     componentDidMount() {
         const {context} = this.props;
         context.data.getCourses()

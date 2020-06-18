@@ -2,6 +2,10 @@ import React, {Component} from 'react';
 import Form from "./Form";
 import CourseFormFields from "./CourseFormFields";
 
+/**
+ * This component is responsible for rendering the Create Course form.
+ * It handles the actions for the creation of the course and the cancellation of that action
+ */
 export default class CreateCourse extends Component {
     state = {
         title: '',
@@ -45,10 +49,17 @@ export default class CreateCourse extends Component {
         )
     }
 
+    /**
+     * Returns the user to the previous window (the page with the Course's details)
+     */
     cancel = () => {
-        this.props.history.push('/');
+        this.props.history.push(this.props.history.goBack());
     }
 
+    /**
+     * It takes the value of the field which is altered and updates the state object
+     * @param event
+     */
     change = (event) => {
         const name = event.target.name;
         const value = event.target.value;
@@ -60,6 +71,10 @@ export default class CreateCourse extends Component {
         });
     }
 
+    /**
+     * Uses the Context's createCourse function which makes a call to the API to add the course to the database
+     * It checks the response returned from the API and redirects the user accordingly
+     */
     submit = () => {
         const {context} = this.props;
         const loggedInUser = context.authenticatedUser;

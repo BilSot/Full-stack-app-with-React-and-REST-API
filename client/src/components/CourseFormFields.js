@@ -1,5 +1,10 @@
 import React from 'react';
 
+/**
+ * functional component responsible for creating the fields on the Create Course and Update Course form
+ * @param props
+ * @return {*}
+ */
 export default (props) => {
     return(
     <React.Fragment>

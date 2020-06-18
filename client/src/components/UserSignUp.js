@@ -2,6 +2,9 @@ import React, {Component} from 'react';
 import {Link} from 'react-router-dom';
 import Form from './Form';
 
+/**
+ * This component is responsible for rendering the Sign up form
+ */
 export default class UserSignUp extends Component {
     state = {
         firstName: '',
@@ -83,6 +86,10 @@ export default class UserSignUp extends Component {
         );
     }
 
+    /**
+     * It takes the value of the field which is altered and updates the state object
+     * @param event
+     */
     change = (event) => {
         const name = event.target.name;
         const value = event.target.value;
@@ -94,6 +101,10 @@ export default class UserSignUp extends Component {
         });
     }
 
+    /**
+     * Performs a check about the validity of all the fields on the form
+     * Uses the Context's createUser function which makes a call to the API and adds the user to the database
+     */
     submit = () => {
 
         const {context} = this.props;
@@ -156,6 +167,9 @@ export default class UserSignUp extends Component {
             });
     }
 
+    /**
+     * Redirects the user to the homepage
+     */
     cancel = () => {
         this.props.history.push('/');
     }

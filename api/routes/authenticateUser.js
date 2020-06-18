@@ -3,6 +3,7 @@ const auth = require('basic-auth');
 const {User, Sequelize} = require('../models/index');
 const Op = Sequelize.Op;
 
+//middleware for authenticating the user
 const authenticateUser = async (req, res, next) => {
     let message = null;
     try {

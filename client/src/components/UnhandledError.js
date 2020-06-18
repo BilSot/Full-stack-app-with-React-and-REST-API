@@ -1,7 +1,7 @@
 import React from 'react';
 import img from "../images/500.png";
 
-const Error = (props) => {
+const UnhandledError = (props) => {
     return (
         <React.Fragment>
             <div className="img-container">
@@ -14,4 +14,4 @@ const Error = (props) => {
         </React.Fragment>
     )};
 
-export default Error;
+export default UnhandledError;

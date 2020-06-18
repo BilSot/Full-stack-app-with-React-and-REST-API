@@ -2,7 +2,7 @@ import React from 'react';
 import {BrowserRouter, Route, Switch, Redirect} from 'react-router-dom';
 
 import Header from './components/Header';
-import Homepage from './components/Homepage';
+import Courses from './components/Courses';
 import CourseDetails from './components/CourseDetails';
 import CreateCourse from './components/CreateCourse';
 import UpdateCourse from './components/UpdateCourse';
@@ -12,11 +12,11 @@ import UserSignOut from './components/UserSignOut';
 import Forbidden from './components/Forbidden';
 import withContext from './Context';
 import PrivateRoute from './PrivateRoute';
-import Error from './components/Error';
+import UnhandledError from './components/UnhandledError';
 import NotFound from './components/NotFound';
 
 const HeaderWithContext = withContext(Header);
-const HomepageWithContext = withContext(Homepage);
+const HomepageWithContext = withContext(Courses);
 const CourseDetailsWithContext = withContext(CourseDetails);
 const CreateCourseWithContext = withContext(CreateCourse);
 const UpdateCourseWithContext = withContext(UpdateCourse);
@@ -38,10 +38,10 @@ export default () => (
                 <Route path="/signin" component={UserSignInWithContext} />
                 <Route path="/signup" component={UserSignUpWithContext} />
                 <Route path="/signout" component={UserSignOutWithContext} />
-                <Route path="/error" exact={true} component={Error}/>
-                <Route path="/not-found" exact={true} component={NotFound}/>
+                <Route path="/error" exact={true} component={UnhandledError}/>
+                <Route path="/notfound" exact={true} component={NotFound}/>
                 <Route path="/forbidden" exact={true} component={Forbidden}/>
-                <Redirect to="/not-found"/>
+                <Redirect to="/notfound"/>
             </Switch>
         </div>
     </BrowserRouter>

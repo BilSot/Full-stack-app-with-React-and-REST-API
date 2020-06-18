@@ -2,6 +2,11 @@ import React, {Component} from 'react';
 import Form from "./Form";
 import CourseFormFields from "./CourseFormFields";
 
+/**
+ * This component is responsible for rendering the Update Course form.
+ * It retrieves the course's data from the API with its given id and populates the form's fields.
+ * It handles the actions for the update of the course and the cancellation of that action
+ */
 export default class UpdateCourse extends Component {
     state = {
         title: '',
@@ -17,22 +22,26 @@ export default class UpdateCourse extends Component {
 
         context.data.getCourse(parseInt(this.props.match.params.id))
             .then(response => {
-                let {title, description, estimatedTime, materialsNeeded} = response;
-                this.setState({
-                    title,
-                    description,
-                    estimatedTime,
-                    materialsNeeded
-                });
-
-                if (authenticatedUser !== null) {
-                    if (response.userId !== authenticatedUser.id) {
-                        this.props.history.push('/forbidden');
+                if (response.error) {
+                    if (response.error === 404) {
+                        this.props.history.push('/notfound');
+                    } else if (response.error === 500) {
+                        this.props.history.push('/error');
                     }
-                } else if (response.status === 404) {
-                    this.props.history.push('/not-found');
-                } else if (response === 500) {
-                    this.props.history.push('/error');
+                } else {
+                    if (authenticatedUser !== null) {
+                        if (response.userId !== authenticatedUser.id) {
+                            this.props.history.push('/forbidden');
+                        } else {
+                            let {title, description, estimatedTime, materialsNeeded} = response;
+                            this.setState({
+                                title,
+                                description,
+                                estimatedTime,
+                                materialsNeeded
+                            });
+                        }
+                    }
                 }
             }).catch((error) => {
             this.setState({
@@ -76,10 +85,17 @@ export default class UpdateCourse extends Component {
         )
     }
 
+    /**
+     * Returns the user to the previous visited page
+     */
     cancel = () => {
-        this.props.history.push('/');
+        this.props.history.push(this.props.history.goBack());
     }
 
+    /**
+     * It takes the value of the field which is altered and updates the state object
+     * @param event
+     */
     change = (event) => {
         const name = event.target.name;
         const value = event.target.value;
@@ -91,6 +107,10 @@ export default class UpdateCourse extends Component {
         });
     }
 
+    /**
+     * Uses the Context's updateCourse function which makes a call to the API to update the current course
+     * It checks the response returned from the API and redirects the user accordingly
+     */
     submit = () => {
         const {context} = this.props;
         const loggedInUser = context.authenticatedUser;
@@ -114,7 +134,7 @@ export default class UpdateCourse extends Component {
         context.data.updateCourse(course, loggedInUser.emailAddress, loggedInUser.password)
             .then(response => {
                 if (response === 404) {
-                    this.props.history.push('/not-found');
+                    this.props.history.push('/notfound');
                 } else if (Array.isArray(response)) {
                     this.setState({
                         errors: response

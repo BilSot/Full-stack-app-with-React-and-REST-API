@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import {NavLink, withRouter} from 'react-router-dom';
 import {Button, Modal} from "react-bootstrap";
-
 const ReactMarkdown = require('react-markdown');
 
+/**
+ *
+ */
 class CourseDetails extends Component {
 
     state = {
@@ -14,6 +16,11 @@ class CourseDetails extends Component {
         errors: []
     }
 
+    /**
+     * When the component first loads, the Context's getCourse function makes a call to the API to retrieve the course's info
+     * and updates the state object
+     * Depending on the API response's status, it redirects the user to the according page
+     */
     componentDidMount() {
         const {context} = this.props;
         const courseId = this.props.id;
@@ -22,7 +29,7 @@ class CourseDetails extends Component {
         context.data.getCourse(courseId)
             .then((response) => {
                 if (response.status === 404) {
-                    this.props.history.push('/not-found');
+                    this.props.history.push('/notfound');
                 } else if (response === 500) {
                     this.props.history.push('/error');
                 } else {
@@ -105,6 +112,12 @@ class CourseDetails extends Component {
         )
     }
 
+    /**
+     * Checks if the user has right to update the course
+     * If yes, they are redirected to the 'update course' page
+     * Otherwise the 'Forbidden' page is displayed
+     * @return {string}
+     */
     canUpdate = () => {
         if (this.state.canBeUpdated) {
             return `/courses/${this.state.course.id}/update`;
@@ -113,6 +126,11 @@ class CourseDetails extends Component {
         }
     }
 
+    /**
+     * Displays the modal dialog for confirming of the course's deletion action
+     * @param course
+     * @return {JSX}
+     */
     modal = (course) => {
         return (
             <React.Fragment>
@@ -139,6 +157,12 @@ class CourseDetails extends Component {
         )
     }
 
+    /**
+     * Performs a call to the Context's deleteCourse function which makes a call to the API for deletion of the course
+     * If success, redirects to the home page
+     * Otherwise the according page, to the response's status, is shown
+     * @param course
+     */
     deleteCourse = (course) => {
         const {context} = this.props;
         const loggedInUser = context.authenticatedUser;

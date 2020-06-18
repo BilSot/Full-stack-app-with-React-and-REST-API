@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Form from './Form';
 
+/**
+ * This component is responsible for rendering the Sign in page
+ */
 export default class UserSignIn extends Component {
   state = {
     username: '',
@@ -51,6 +54,10 @@ export default class UserSignIn extends Component {
     );
   }
 
+  /**
+   * It takes the value of the field which is altered and updates the state object
+   * @param event
+   */
   change = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -62,6 +69,11 @@ export default class UserSignIn extends Component {
     });
   }
 
+  /**
+   * Performs a call to the Context's signIn function which checks if a user exists with the given credentials
+   * If success, redirects to last visited page or the homepage
+   * Otherwise shows the Error page
+   */
   submit = () => {
     const { context } = this.props;
     const { username, password } = this.state;
@@ -83,6 +95,9 @@ export default class UserSignIn extends Component {
         });
   }
 
+  /**
+   * Redirects the user to the homepage
+   */
   cancel = () => {
     this.props.history.push('/');
   }

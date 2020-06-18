@@ -70,10 +70,10 @@ export default class Data {
       return response.json().then(data => data);
     }
     else if (response.status === 404) {
-      return response;
+      return {error: 404};
     }
     else if(response.status === 500){
-      return 500;
+      return {error:500};
     }
   }
 
