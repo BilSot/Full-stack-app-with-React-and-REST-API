@@ -11,3 +11,19 @@ In addition, the project requires users to create an account and sign in to make
 - React Router to set up the routes
 - Use the Fetch API to fetch data from the REST API
 - Basic authentication to support users signing in
+
+
+### How to run the application
+## Install Node modules and get the database setup
+- Open a Command Prompt (on Windows) or Terminal (on macOS and Linux) instance and browse to the `api` project folder.
+- Run the command npm install to install the required dependencies.
+- Run the command npm run seed to create the application's database and populate it with data.
+- After the command completes, you'll find in the project's root folder a SQLite database file named fsjstd-restapi.db. To view the data inside the database, you can use DB Browser for SQLite.
+- Run the command npm start to run the Node.js Express application.
+- You can press Ctrl-C to stop the Node.js REST API.
+
+## Install Node modules of the React application
+- Open a Command Prompt (on Windows) or Terminal (on macOS and Linux) instance and browse to the `client` project folder.
+- Run the command npm install to install the required dependencies.
+- Run the command npm start to run the React application.
+- You can press Ctrl-C to stop React.
