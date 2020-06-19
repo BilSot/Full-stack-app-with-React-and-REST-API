@@ -28,9 +28,9 @@ class CourseDetails extends Component {
 
         context.data.getCourse(courseId)
             .then((response) => {
-                if (response.status === 404) {
+                if (response.error === 404) {
                     this.props.history.push('/notfound');
-                } else if (response === 500) {
+                } else if (response.error === 500) {
                     this.props.history.push('/error');
                 } else {
                     let obj = {
